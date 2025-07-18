@@ -41,11 +41,30 @@
       color: #4e4376;
       font-weight: bold;
       font-size: 1.16em;
-      text-align: center;
-      padding: 10px 0 8px 0;
       box-shadow: 0 2px 8px #232b6644;
       margin-bottom: 0;
       letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 10px 0 8px 0;
+      text-align: center;
+    }
+    .logout-btn {
+      background: #d72660;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 8px 24px;
+      font-size: 1em;
+      margin-left: 14px;
+      transition: background 0.18s;
+    }
+    .logout-btn:hover {
+      background: #b71a3a;
     }
     .login-panel {
       background: #fffbe6;
@@ -176,6 +195,31 @@
       background: linear-gradient(90deg, #4e4376 10%, #2b5876 90%);
       transform: translateY(-2px) scale(1.03);
     }
+    .autocomplete-list-clientes {
+      position: absolute;
+      left: 0;
+      top: 54px;
+      width: 320px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background: #fffbe6;
+      border: 1px solid #e0e0e0;
+      border-radius: 7px;
+      z-index: 10;
+      display: none;
+      max-height: 210px;
+      overflow-y: auto;
+      box-shadow: 0 2px 10px #0002;
+    }
+    .autocomplete-list-clientes li {
+      padding: 9px;
+      cursor: pointer;
+    }
+    .autocomplete-list-clientes li:hover {
+      background: #e4f0fa;
+      color: #2179b8;
+    }
     /* Bloques de producto en venta */
     .venta-bloque {
       background: var(--azul-fondo);
@@ -234,7 +278,6 @@
       align-items: center;
     }
     .starlink-fechas label { color: #4e4376; font-weight: bold; }
-    /* Totales y recibo */
     .recibo-totales {
       background: var(--azul-campo);
       font-size: 1.07em;
@@ -310,6 +353,8 @@
       .main-panel, .recibo-totales, .recibo-footer {max-width:99vw;}
       .venta-bloque {padding: 7px 4vw 7px 4vw; gap:5px 2vw;}
       .venta-bloque input, .venta-bloque select {width: 95vw; max-width:99vw;}
+      .cajera-bar {flex-direction:column;}
+      .logout-btn {margin-left:0; margin-top:8px;}
     }
     @media (max-width: 650px) {
       .main-panel,
@@ -363,7 +408,10 @@
 <body>
   <div class="marquesina">Servicios EM - Punto de Venta</div>
   <div class="cajera-bar" id="cajeraBar" style="display:none;">
-    Cajera: <span id="nombreCajera"></span> &nbsp;|&nbsp; Inicio de turno: <span id="horaInicio"></span>
+    <span>Cajera: <span id="nombreCajera"></span></span>
+    <span>|</span>
+    <span>Inicio de turno: <span id="horaInicio"></span></span>
+    <button class="logout-btn" onclick="logoutCajera()">Cerrar sesión</button>
   </div>
   <div id="login-box" class="login-panel">
     <label for="login-usuario">Usuario (email de la cajera):</label>
@@ -392,11 +440,12 @@
       <p id="cliente-mensaje"></p>
     </div>
     <div class="tab-content" id="tab-ventas">
-      <div style="margin-bottom:14px;">
-        <label style="font-weight:bold; color:#4e4376;">Cliente:</label>
-        <select id="select-cliente" style="width:320px;">
-          <option value="">-- Selecciona cliente --</option>
-        </select>
+      <!-- AUTOCOMPLETE CLIENTE -->
+      <div style="margin-bottom:14px; position:relative;">
+        <label style="font-weight:bold; color:#4e4376;">Buscar cliente:</label>
+        <input type="text" id="buscador-cliente" placeholder="Escribe nombre o inicial..." style="width:320px;" autocomplete="off" />
+        <ul id="lista-clientes-autocomplete" class="autocomplete-list-clientes"></ul>
+        <input type="hidden" id="cliente-id-seleccionado" />
       </div>
       <div id="contenedor-filas-ventas"></div>
       <button onclick="agregarFilaVenta()" style="background:linear-gradient(90deg,#232b66,#5c3c92);margin-top:5px;width:220px;">Agregar Producto</button>
@@ -431,24 +480,52 @@
   <script>
     // LOGIN
     let horaInicioSesion = '';
-    function loginCajera() {
+    async function loginCajera() {
       const usuario = document.getElementById('login-usuario').value.trim();
       const pass = document.getElementById('login-pass').value.trim();
       const error = document.getElementById('login-error');
       error.textContent = '';
-      if(usuario === 'mirandaetelvina383@gmail.com' && pass === 'suave2021') {
-        document.getElementById('login-box').style.display = 'none';
-        document.getElementById('main-panel').style.display = '';
-        document.getElementById('cajeraBar').style.display = '';
-        document.getElementById('nombreCajera').textContent = "Miranda Etelvina";
-        horaInicioSesion = obtenerHoraActual();
-        document.getElementById('horaInicio').textContent = horaInicioSesion;
-        cargarClientes();
-        agregarFilaVenta();
-      } else {
-        error.textContent = 'Usuario o contraseña incorrectos';
+      try {
+        const res = await fetch('https://login-foue72b53a-uc.a.run.app', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ correo: usuario, password: pass })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          localStorage.setItem('cajeraLogueada', 'true');
+          localStorage.setItem('nombreCajera', data.nombre || usuario);
+          localStorage.setItem('horaInicioSesion', obtenerHoraActual());
+          mostrarPanelPrincipal();
+        } else {
+          error.textContent = data.error || 'Usuario o contraseña incorrectos';
+        }
+      } catch (e) {
+        error.textContent = 'No se pudo conectar al servidor';
       }
     }
+
+    function mostrarPanelPrincipal() {
+      document.getElementById('login-box').style.display = 'none';
+      document.getElementById('main-panel').style.display = '';
+      document.getElementById('cajeraBar').style.display = '';
+      document.getElementById('nombreCajera').textContent = localStorage.getItem('nombreCajera');
+      document.getElementById('horaInicio').textContent = localStorage.getItem('horaInicioSesion');
+      cargarClientes();
+      agregarFilaVenta();
+    }
+
+    window.onload = function() {
+      if(localStorage.getItem('cajeraLogueada') === 'true') {
+        mostrarPanelPrincipal();
+      }
+    };
+
+    function logoutCajera() {
+      localStorage.clear();
+      location.reload();
+    }
+
     function obtenerHoraActual() {
       const ahora = new Date();
       const fecha = ahora.toLocaleDateString();
@@ -465,24 +542,71 @@
       if(idx===1) cargarClientes();
     }
 
-    // CLIENTES
+    // CLIENTES CON AUTOCOMPLETE BUSCADOR
+    let listaClientes = [];
     async function cargarClientes() {
-      const select = document.getElementById('select-cliente');
-      select.innerHTML = '<option value="">-- Selecciona cliente --</option>';
+      let clientesCache = localStorage.getItem('clientes');
+      if (clientesCache) {
+        listaClientes = JSON.parse(clientesCache);
+        return;
+      }
       try {
         const res = await fetch("https://us-central1-servicios-em.cloudfunctions.net/obtenerClientes");
         const data = await res.json();
         if (!data.clientes || data.clientes.length === 0) return;
-        data.clientes.forEach(c => {
-          const option = document.createElement('option');
-          option.value = c.id;
-          option.textContent = c.nombre;
-          select.appendChild(option);
-        });
+        listaClientes = data.clientes;
+        localStorage.setItem('clientes', JSON.stringify(listaClientes));
       } catch (error) {
         console.error('Error cargando clientes:', error);
       }
     }
+    document.addEventListener('DOMContentLoaded', function() {
+      const buscador = document.getElementById('buscador-cliente');
+      const lista = document.getElementById('lista-clientes-autocomplete');
+      const inputId = document.getElementById('cliente-id-seleccionado');
+
+      buscador.addEventListener('input', function() {
+        const texto = this.value.trim().toLowerCase();
+        inputId.value = '';
+        if (!texto) {
+          lista.innerHTML = '';
+          lista.style.display = 'none';
+          return;
+        }
+        // Busca por inicial o nombre completo
+        const filtrados = listaClientes.filter(c => {
+          const nombre = c.nombre.toLowerCase();
+          return nombre.startsWith(texto) || nombre.includes(texto);
+        });
+        if (filtrados.length === 0) {
+          lista.innerHTML = '<li style="padding:9px;color:#d72660;">No encontrado</li>';
+          lista.style.display = 'block';
+          return;
+        }
+        lista.innerHTML = filtrados.map(c =>
+          `<li data-id="${c.id}" data-nombre="${c.nombre}">${c.nombre}</li>`
+        ).join('');
+        lista.style.display = 'block';
+      });
+
+      lista.addEventListener('click', function(e) {
+        const li = e.target.closest('li[data-id]');
+        if (li) {
+          buscador.value = li.getAttribute('data-nombre');
+          inputId.value = li.getAttribute('data-id');
+          lista.innerHTML = '';
+          lista.style.display = 'none';
+        }
+      });
+
+      buscador.addEventListener('blur', function() {
+        setTimeout(() => { lista.style.display = 'none'; }, 120);
+      });
+      buscador.addEventListener('focus', function() {
+        if (lista.innerHTML) lista.style.display = 'block';
+      });
+    });
+
     async function registrarCliente() {
       const nombre = document.getElementById('cliente-nombre').value.trim();
       const correo = document.getElementById('cliente-correo').value.trim();
@@ -509,6 +633,7 @@
         msg.textContent = 'Cliente registrado con éxito';
         msg.className = '';
         limpiarCamposCliente();
+        localStorage.removeItem('clientes');
         await cargarClientes();
       } catch (e) {
         msg.textContent = 'Error al registrar cliente: ' + e.message;
@@ -696,9 +821,8 @@
     }
 
     async function registrarVenta() {
-      const clienteSelect = document.getElementById('select-cliente');
-      const clienteId = clienteSelect.value;
-      const clienteNombre = clienteSelect.selectedOptions[0]?.textContent || '';
+      const clienteId = document.getElementById('cliente-id-seleccionado').value;
+      const clienteNombre = document.getElementById('buscador-cliente').value;
       const formaPago = document.getElementById('forma-pago').value;
       const abono = parseFloat(document.getElementById('abono').value) || 0;
       const saldoPendiente = parseFloat(document.getElementById('saldo-pendiente').value) || 0;
@@ -728,7 +852,6 @@
         const descuento = parseFloat(bloque.querySelector('.descuento').value) || 0;
         const itbms = parseFloat(bloque.querySelector('.itbms').value) || 0;
         const subtotal = parseFloat(bloque.querySelector('.subtotal').value) || 0;
-        // Starlink fechas
         let starlink_inicio = null, starlink_fin = null;
         if (producto.toLowerCase().includes('starlink') || codigo === "2") {
           starlink_inicio = bloque.querySelector('.starlink-inicio').value;
@@ -794,7 +917,8 @@
       }
     }
     function limpiarFormularioVenta() {
-      document.getElementById('select-cliente').value = '';
+      document.getElementById('buscador-cliente').value = '';
+      document.getElementById('cliente-id-seleccionado').value = '';
       document.getElementById('contenedor-filas-ventas').innerHTML = '';
       document.getElementById('venta-subtotal').textContent = '0.00';
       document.getElementById('venta-descuento').textContent = '0.00';
