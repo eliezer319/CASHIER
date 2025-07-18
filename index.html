@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Servicios EM | Punto de Venta</title>
+  <style>
+    :root {
+      --azul-claro: #e4f0fa;
+      --azul-fondo: #d5eaf8;
+      --azul-borde: #bce0f8;
+      --azul-titulo: #58b6ff;
+      --azul-tabla: #8fd5ff;
+      --azul-campo: #eaf6ff;
+      --morado: #6a348f;
+      --amarillo: #f9d423;
+      --rosa: #ff4e50;
+      --blanco: #fffbe6;
+      --fondo: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+      --marquesina: linear-gradient(90deg, #232b66 0%, #d72660 100%);
+    }
+    body {
+      background: var(--fondo);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .marquesina {
+      width: 100vw;
+      padding: 22px 0 18px 0;
+      background: var(--marquesina);
+      text-align: center;
+      color: #fff;
+      font-size: 2.2em;
+      font-weight: bold;
+      letter-spacing: 2.5px;
+      box-shadow: 0 4px 16px #0002;
+      margin-bottom: 0;
+    }
+    .cajera-bar {
+      background: #fffbe6;
+      color: #4e4376;
+      font-weight: bold;
+      font-size: 1.16em;
+      text-align: center;
+      padding: 10px 0 8px 0;
+      box-shadow: 0 2px 8px #232b6644;
+      margin-bottom: 0;
+      letter-spacing: 1px;
+    }
+    .login-panel {
+      background: #fffbe6;
+      max-width: 360px;
+      margin: 70px auto 0 auto;
+      padding: 34px 25px 28px 25px;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px #0002;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 11px;
+    }
+    .login-panel label {
+      font-weight: bold;
+      color: var(--morado);
+      font-size: 1.08em;
+      margin-bottom: 3px;
+    }
+    .login-panel input {
+      border-radius: 7px;
+      border: 1px solid #e0e0e0;
+      padding: 7px 10px;
+      font-size: 1em;
+      background: #f9fafc;
+      width: 98%;
+      margin-bottom: 10px;
+    }
+    .login-btn {
+      background: linear-gradient(90deg, #232b66 60%, #d72660 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      height: 40px;
+      font-size: 1.13em;
+      margin-top: 8px;
+    }
+    .login-btn:hover {
+      background: linear-gradient(90deg, #d72660 60%, #232b66 100%);
+    }
+    .login-error {
+      color: #d72660;
+      font-weight: bold;
+      margin-top: 3px;
+      margin-bottom: 0;
+    }
+    .main-panel {
+      background: #fffbe6;
+      border-radius: 22px;
+      margin: 36px auto;
+      max-width: 1000px;
+      box-shadow: 0 4px 24px #0002;
+      padding: 0 0 36px 0;
+      position: relative;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-radius: 22px 22px 0 0;
+      overflow: hidden;
+      background: #f9d423;
+      box-shadow: 0 2px 7px #ffd6e033;
+    }
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 1.18em;
+      font-weight: bold;
+      color: #5c3c92;
+      padding: 20px 0;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      letter-spacing: 1.2px;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--marquesina);
+      color: #fff;
+    }
+    .tab-content {
+      display: none;
+      padding: 32px 38px 0 38px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .error {
+      color: #d72660;
+      font-weight: bold;
+      font-size: 1.08em;
+      padding-left: 5px;
+    }
+    label {
+      font-weight: bold;
+      color: #4527a0;
+      font-size: 1.06em;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, textarea, button {
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      font-size: 1em;
+      background: #f9fafc;
+      box-sizing: border-box;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      padding: 9px 11px;
+      width: 320px;
+    }
+    textarea { min-height: 55px; }
+    button {
+      background: linear-gradient(90deg, #2b5876 40%, #4e4376 100%);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+      height: 38px;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #4e4376 10%, #2b5876 90%);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    /* ----------- RECIBO HORIZONTAL ----------- */
+    .recibo-horizontal {
+      background: var(--azul-fondo);
+      border-radius: 13px;
+      box-shadow: 0 4px 18px #0001;
+      border: 2px solid var(--azul-borde);
+      padding: 20px 18px 24px 18px;
+      margin-bottom: 22px;
+      margin-top: 10px;
+      position: relative;
+    }
+    .recibo-header-block {
+      background: var(--azul-claro);
+      border-radius: 13px 13px 0 0;
+      padding: 12px 12px 7px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 18px;
+    }
+    .recibo-title {
+      color: var(--azul-titulo);
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+    .recibo-meta {
+      background: #fff;
+      text-align: right;
+      font-size: 1em;
+      color: #0083c6;
+      line-height: 1.3em;
+      padding: 6px 11px;
+      border-radius: 9px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px #00000011;
+      margin-top: 0;
+    }
+    .recibo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      margin-bottom: 0;
+      font-size: 0.98em;
+    }
+    .recibo-table th {
+      background: var(--azul-titulo);
+      color: #fff;
+      font-weight: bold;
+      border-bottom: 2px solid var(--azul-borde);
+      padding: 10px 2px;
+      font-size: 1em;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    .recibo-table td {
+      text-align: center;
+      padding: 9px 2px;
+      border-bottom: 1px solid #bce0f8;
+      color: #195e8a;
+      background: var(--azul-campo);
+    }
+    .recibo-table input, .recibo-table select {
+      width: 110px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #bce0f8;
+      padding: 4px 2px;
+      background: #fff;
+      text-align:center;
+      margin: 0;
+    }
+    .recibo-table .recibo-eliminar {
+      color: #fff;
+      background: linear-gradient(90deg, #f9d423 40%, #d72660 100%);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1em;
+      padding: 6px 13px;
+    }
+    .recibo-table .recibo-eliminar:hover {
+      background: linear-gradient(90deg, #d72660 10%, #f9d423 90%);
+      color: #2179b8;
+      transform: scale(1.03);
+    }
+    .recibo-btns {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      text-align: right;
+    }
+    .recibo-btns button {
+      width: auto;
+      min-width: 120px;
+      height: 40px;
+      font-size: 1.09em;
+      background: linear-gradient(90deg, #58b6ff 40%, #2179b8 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .recibo-btns button:hover {
+      background: linear-gradient(90deg, #2179b8 10%, #58b6ff 90%);
+      transform: scale(1.04);
+    }
+    .recibo-totales {
+      background: var(--azul-campo);
+      font-size: 1.07em;
+      text-align: right;
+      color: #2179b8;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--azul-borde);
+      padding: 18px 11px 13px 11px;
+      border-radius: 7px;
+      margin-top: 16px;
+      margin-bottom: 12px;
+    }
+    .recibo-totales .campo {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+    .recibo-totales .total {
+      font-size: 1.2em;
+      font-weight: bold;
+      background: #fff;
+      color: #0583c7;
+      padding: 6px 18px;
+      border-radius: 10px;
+      display: inline-block;
+      border: 2px solid #58b6ff;
+      letter-spacing: 1px;
+    }
+    .recibo-footer {
+      background: var(--azul-claro);
+      color: #2179b8;
+      font-size: 0.98em;
+      border-radius: 0 0 13px 13px;
+      border-top: 2px solid var(--azul-borde);
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 36px;
+      padding: 8px 13px 8px 13px;
+      margin-top: 20px;
+    }
+    .recibo-footer .logo {
+      background: var(--azul-borde);
+      color: #2179b8;
+      border-radius: 8px;
+      font-weight: bold;
+      padding: 5px 12px;
+      font-size: 1em;
+      border: 1.5px dashed var(--azul-titulo);
+      letter-spacing: 1px;
+      min-width: 70px;
+      text-align: center;
+    }
+    .recibo-footer .gracias {
+      font-weight: bold;
+      font-size: 1em;
+      color: #2179b8;
+      display: flex;
+      align-items: center;
+    }
+    .recibo-footer .gracias span {
+      font-size: 1.22em;
+      margin-right: 4px;
+    }
+    @media (max-width: 900px) {
+      .recibo-horizontal, .recibo-header-block, .recibo-footer { border-radius: 0; margin: 0; padding-left: 3vw; padding-right: 3vw;}
+      .recibo-title { font-size: 1.1em; }
+      .recibo-footer { flex-direction: column; align-items: flex-start;}
+      .recibo-footer .logo, .recibo-footer .gracias { margin-bottom: 7px;}
+      .recibo-table th, .recibo-table td { font-size: 0.97em;}
+      .recibo-table input, .recibo-table select { width: 90px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="marquesina">Servicios EM - Punto de Venta</div>
+  <div class="cajera-bar" id="cajeraBar" style="display:none;">
+    Cajera: <span id="nombreCajera"></span> &nbsp;|&nbsp; Inicio de turno: <span id="horaInicio"></span>
+  </div>
+  <div id="login-box" class="login-panel">
+    <label for="login-usuario">Usuario (email de la cajera):</label>
+    <input type="email" id="login-usuario" placeholder="Correo electrónico" autocomplete="username" />
+    <label for="login-pass">Contraseña:</label>
+    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"/>
+    <button class="login-btn" onclick="loginCajera()">Ingresar</button>
+    <p id="login-error" class="login-error"></p>
+  </div>
+  <div id="main-panel" class="main-panel" style="display:none;">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(0)">Registrar Cliente</button>
+      <button class="tab-btn" onclick="showTab(1)">Registrar Venta</button>
+    </div>
+    <div class="tab-content active" id="tab-clientes">
+      <h2 style="color:#6a348f; margin-top:0;">Registrar Cliente</h2>
+      <label for="cliente-nombre">Nombre:</label>
+      <input type="text" id="cliente-nombre" placeholder="Nombre cliente" />
+      <label for="cliente-correo">Correo:</label>
+      <input type="email" id="cliente-correo" placeholder="Correo cliente" />
+      <label for="cliente-direccion">Dirección:</label>
+      <textarea id="cliente-direccion" rows="2" placeholder="Dirección cliente" style="width:320px"></textarea>
+      <label for="cliente-telefono">Teléfono:</label>
+      <input type="text" id="cliente-telefono" placeholder="Teléfono cliente" />
+      <button onclick="registrarCliente()">Registrar Cliente Nuevo</button>
+      <p id="cliente-mensaje"></p>
+    </div>
+    <div class="tab-content" id="tab-ventas">
+      <div class="recibo-horizontal">
+        <div class="recibo-header-block">
+          <span class="recibo-title">RECIBO DE VENTA</span>
+          <span class="recibo-meta">
+            Fecha: <span id="factura-fecha"></span>
+          </span>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:bold; color:#4e4376;">Cliente:</label>
+          <select id="select-cliente" style="width:320px;">
+            <option value="">-- Selecciona cliente --</option>
+          </select>
+        </div>
+        <div class="recibo-btns">
+          <button type="button" onclick="agregarFilaVenta()">Agregar Producto</button>
+        </div>
+        <table class="recibo-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Código</th>
+              <th>Categoría</th>
+              <th>Tipo</th>
+              <th>Unidad</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Descuento (%)</th>
+              <th>ITBMS (%)</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="contenedor-filas-ventas"></tbody>
+        </table>
+        <div class="recibo-totales" id="totales-venta">
+          <div class="campo">Subtotal: <span id="venta-subtotal">0.00</span></div>
+          <div class="campo">Descuento total: <span id="venta-descuento">0.00</span></div>
+          <div class="campo">ITBMS total: <span id="venta-itbms">0.00</span></div>
+          <div class="total">TOTAL: <span id="venta-total">0.00</span></div>
+          <div class="campo" style="margin-top:11px;">
+            <label for="abono">Abono:</label>
+            <input type="number" id="abono" min="0" step="0.01" value="0" style="width:100px;"/>
+            <label for="forma-pago">Forma de pago:</label>
+            <select id="forma-pago" style="width:110px;">
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Crédito">Crédito</option>
+            </select>
+            <label for="saldo-pendiente">Saldo pendiente:</label>
+            <input type="number" id="saldo-pendiente" readonly value="0" style="width:100px;"/>
+          </div>
+        </div>
+        <div class="recibo-btns">
+          <button style="width:220px;" onclick="registrarVenta()">Registrar Venta</button>
+        </div>
+        <div class="recibo-footer">
+          <div class="logo">TU LOGO</div>
+          <span>Comentarios o instrucciones especiales: El pago debe realizarse en un plazo de 30 días</span>
+          <div class="gracias"><span>😊</span>Gracias por su visita!</div>
+        </div>
+        <p id="venta-mensaje"></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('factura-fecha').textContent = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    // LOGIN
+    let horaInicioSesion = '';
+    function loginCajera() {
+      const usuario = document.getElementById('login-usuario').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
+      const error = document.getElementById('login-error');
+      error.textContent = '';
+      if(usuario === 'mirandaetelvina383@gmail.com' && pass === 'suave2021') {
+        document.getElementById('login-box').style.display = 'none';
+        document.getElementById('main-panel').style.display = '';
+        document.getElementById('cajeraBar').style.display = '';
+        document.getElementById('nombreCajera').textContent = "Miranda Etelvina";
+        horaInicioSesion = obtenerHoraActual();
+        document.getElementById('horaInicio').textContent = horaInicioSesion;
+        cargarClientes();
+        agregarFilaVenta();
+      } else {
+        error.textContent = 'Usuario o contraseña incorrectos';
+      }
+    }
+    function obtenerHoraActual() {
+      const ahora = new Date();
+      const fecha = ahora.toLocaleDateString();
+      const hora = ahora.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      return `${fecha} ${hora}`;
+    }
+    // TABS
+    function showTab(idx) {
+      const tabs = document.querySelectorAll('.tab-btn');
+      const contents = document.querySelectorAll('.tab-content');
+      tabs.forEach((t,i)=>t.classList.toggle('active',i===idx));
+      contents.forEach((c,i)=>c.classList.toggle('active',i===idx));
+      if(idx===1) cargarClientes();
+    }
+    // CLIENTES
+    async function cargarClientes() {
+      const select = document.getElementById('select-cliente');
+      select.innerHTML = '<option value="">-- Selecciona cliente --</option>';
+      try {
+        const res = await fetch("https://us-central1-servicios-em.cloudfunctions.net/obtenerClientes");
+        const data = await res.json();
+        if (!data.clientes || data.clientes.length === 0) return;
+        data.clientes.forEach(c => {
+          const option = document.createElement('option');
+          option.value = c.id;
+          option.textContent = c.nombre;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error cargando clientes:', error);
+      }
+    }
+    async function registrarCliente() {
+      const nombre = document.getElementById('cliente-nombre').value.trim();
+      const correo = document.getElementById('cliente-correo').value.trim();
+      const direccion = document.getElementById('cliente-direccion').value.trim();
+      const telefono = document.getElementById('cliente-telefono').value.trim();
+      const msg = document.getElementById('cliente-mensaje');
+      msg.textContent = '';
+      msg.className = '';
+      if (!nombre || !correo || !direccion || !telefono) {
+        msg.textContent = 'Completa todos los campos del cliente';
+        msg.className = 'error';
+        return;
+      }
+      try {
+        const res = await fetch("https://us-central1-servicios-em.cloudfunctions.net/registrarCliente", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, correo, direccion, telefono })
+        });
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Error desconocido");
+        }
+        msg.textContent = 'Cliente registrado con éxito';
+        msg.className = '';
+        limpiarCamposCliente();
+        await cargarClientes();
+      } catch (e) {
+        msg.textContent = 'Error al registrar cliente: ' + e.message;
+        msg.className = 'error';
+      }
+    }
+    function limpiarCamposCliente() {
+      document.getElementById('cliente-nombre').value = '';
+      document.getElementById('cliente-correo').value = '';
+      document.getElementById('cliente-direccion').value = '';
+      document.getElementById('cliente-telefono').value = '';
+    }
+
+    // VENTAS
+    function agregarFilaVenta(valores={}) {
+      const contenedor = document.getElementById('contenedor-filas-ventas');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="producto" value="${valores.producto||''}"></td>
+        <td><input type="text" class="codigo" value="${valores.codigo||''}"></td>
+        <td><input type="text" class="categoria" value="${valores.categoria||''}" readonly></td>
+        <td><input type="text" class="tipo" value="${valores.tipo||''}" readonly></td>
+        <td><input type="text" class="unidad" value="${valores.unidad||''}" readonly></td>
+        <td><input type="number" class="cantidad" min="1" value="${valores.cantidad||1}"></td>
+        <td><input type="number" class="precio_unitario" step="0.01" value="${valores.precio_unitario||''}" readonly></td>
+        <td><input type="number" class="descuento" step="0.01" value="${valores.descuento||0}"></td>
+        <td><input type="number" class="itbms" step="0.01" value="${valores.itbms||0}"></td>
+        <td><input type="number" class="subtotal" step="0.01" value="0.00" readonly></td>
+        <td>
+          <button type="button" class="recibo-eliminar" onclick="eliminarFilaVenta(this)">Eliminar</button>
+          <div class="starlink-fechas" style="display:none; margin-top:10px;">
+            <label style="display:block;">Inicio (Fecha y Hora)</label>
+            <input type="datetime-local" class="starlink-inicio">
+            <label style="display:block;">Fin (Fecha y Hora)</label>
+            <input type="datetime-local" class="starlink-fin">
+          </div>
+        </td>
+      `;
+      contenedor.appendChild(tr);
+
+      function mostrarCamposStarlink() {
+        const prod = tr.querySelector('.producto').value.trim().toLowerCase();
+        const codigo = tr.querySelector('.codigo').value.trim();
+        const fechas = tr.querySelector('.starlink-fechas');
+        if (prod.includes('starlink') || codigo === "2") {
+          fechas.style.display = 'block';
+        } else {
+          fechas.style.display = 'none';
+        }
+      }
+      tr.querySelector('.producto').addEventListener('input', mostrarCamposStarlink);
+      tr.querySelector('.codigo').addEventListener('input', mostrarCamposStarlink);
+      mostrarCamposStarlink();
+
+      // Eventos
+      tr.querySelector('.cantidad').addEventListener('input', ()=>{actualizarSubtotalFila(tr); actualizarTotales();});
+      tr.querySelector('.descuento').addEventListener('input', ()=>{actualizarSubtotalFila(tr); actualizarTotales();});
+      tr.querySelector('.itbms').addEventListener('input', ()=>{actualizarSubtotalFila(tr); actualizarTotales();});
+
+      // Autorelleno por producto
+      tr.querySelector('.producto').addEventListener('input', async () => {
+        const val = tr.querySelector('.producto').value.trim().toLowerCase();
+        if (!val) return;
+        try {
+          const res = await fetch(`https://us-central1-servicios-em.cloudfunctions.net/buscarProductoPorCodigo?producto=${encodeURIComponent(val)}`);
+          const data = await res.json();
+          if (res.ok && data.producto) rellenarFilaVenta(tr, data.producto);
+        } catch (e) {}
+      });
+      // Autorelleno por código
+      tr.querySelector('.codigo').addEventListener('input', async () => {
+        const val = tr.querySelector('.codigo').value.trim();
+        if (!val) return;
+        try {
+          const res = await fetch(`https://us-central1-servicios-em.cloudfunctions.net/buscarProductoPorCodigo?codigo=${encodeURIComponent(val)}`);
+          const data = await res.json();
+          if (res.ok && data.producto) rellenarFilaVenta(tr, data.producto);
+        } catch (e) {}
+      });
+      actualizarSubtotalFila(tr);
+      actualizarTotales();
+    }
+    function eliminarFilaVenta(btn) {
+      btn.closest('tr').remove();
+      actualizarTotales();
+    }
+    function rellenarFilaVenta(tr, data) {
+      tr.querySelector('.producto').value = data.producto || '';
+      tr.querySelector('.codigo').value = data.codigo || '';
+      tr.querySelector('.categoria').value = data.categoria || '';
+      tr.querySelector('.tipo').value = data.tipo || '';
+      tr.querySelector('.unidad').value = data.unidad || '';
+      tr.querySelector('.precio_unitario').value = Number(data.precio_unitario).toFixed(2) || '0.00';
+      tr.querySelector('.descuento').value = Number(data.descuento).toFixed(2) || '0.00';
+      tr.querySelector('.itbms').value = Number(data.itbms).toFixed(2) || '0.00';
+      actualizarSubtotalFila(tr);
+      actualizarTotales();
+    }
+    function actualizarSubtotalFila(tr) {
+      const precio = parseFloat(tr.querySelector('.precio_unitario').value) || 0;
+      const cantidad = parseInt(tr.querySelector('.cantidad').value) || 0;
+      const descuento = parseFloat(tr.querySelector('.descuento').value) || 0;
+      const itbms = parseFloat(tr.querySelector('.itbms').value) || 0;
+      let subtotal = precio * cantidad;
+      const descuentoMonto = subtotal * (descuento / 100);
+      const itbmsMonto = (subtotal - descuentoMonto) * (itbms / 100);
+      const total = subtotal - descuentoMonto + itbmsMonto;
+      tr.querySelector('.subtotal').value = total.toFixed(2);
+    }
+    function actualizarTotales() {
+      const filas = document.querySelectorAll('#contenedor-filas-ventas tr');
+      let subtotalTotal = 0, descuentoTotal = 0, itbmsTotal = 0;
+      filas.forEach(tr => {
+        const precio = parseFloat(tr.querySelector('.precio_unitario').value) || 0;
+        const cantidad = parseInt(tr.querySelector('.cantidad').value) || 0;
+        const descuento = parseFloat(tr.querySelector('.descuento').value) || 0;
+        const itbms = parseFloat(tr.querySelector('.itbms').value) || 0;
+        let subtotal = precio * cantidad;
+        let descuentoMonto = subtotal * (descuento / 100);
+        let itbmsMonto = (subtotal - descuentoMonto) * (itbms / 100);
+        subtotalTotal += subtotal;
+        descuentoTotal += descuentoMonto;
+        itbmsTotal += itbmsMonto;
+      });
+      let total = subtotalTotal - descuentoTotal + itbmsTotal;
+      document.getElementById('venta-subtotal').textContent = subtotalTotal.toFixed(2);
+      document.getElementById('venta-descuento').textContent = descuentoTotal.toFixed(2);
+      document.getElementById('venta-itbms').textContent = itbmsTotal.toFixed(2);
+      document.getElementById('venta-total').textContent = total.toFixed(2);
+      const abono = parseFloat(document.getElementById('abono').value) || 0;
+      const saldo = total - abono;
+      document.getElementById('saldo-pendiente').value = saldo.toFixed(2);
+    }
+    document.getElementById('abono').addEventListener('input', actualizarTotales);
+    async function registrarVenta() {
+      const clienteSelect = document.getElementById('select-cliente');
+      const clienteId = clienteSelect.value;
+      const clienteNombre = clienteSelect.selectedOptions[0]?.textContent || '';
+      const formaPago = document.getElementById('forma-pago').value;
+      const abono = parseFloat(document.getElementById('abono').value) || 0;
+      const saldoPendiente = parseFloat(document.getElementById('saldo-pendiente').value) || 0;
+      const msg = document.getElementById('venta-mensaje');
+      msg.textContent = '';
+      msg.className = '';
+      if (!clienteId) {
+        msg.textContent = 'Selecciona un cliente para la venta';
+        msg.className = 'error';
+        return;
+      }
+      const filas = document.querySelectorAll('#contenedor-filas-ventas tr');
+      if (filas.length === 0) {
+        msg.textContent = 'Agrega al menos un producto a la venta';
+        msg.className = 'error';
+        return;
+      }
+      let productosVenta = [];
+      for (const tr of filas) {
+        const producto = tr.querySelector('.producto').value.trim();
+        const codigo = tr.querySelector('.codigo').value.trim();
+        const categoria = tr.querySelector('.categoria').value.trim();
+        const tipo = tr.querySelector('.tipo').value.trim();
+        const unidad = tr.querySelector('.unidad').value.trim();
+        const cantidad = parseInt(tr.querySelector('.cantidad').value) || 0;
+        const precio_unitario = parseFloat(tr.querySelector('.precio_unitario').value) || 0;
+        const descuento = parseFloat(tr.querySelector('.descuento').value) || 0;
+        const itbms = parseFloat(tr.querySelector('.itbms').value) || 0;
+        const subtotal = parseFloat(tr.querySelector('.subtotal').value) || 0;
+        // Starlink fechas
+        let starlink_inicio = null, starlink_fin = null;
+        const fechas = tr.querySelector('.starlink-fechas');
+        if (fechas && (producto.toLowerCase().includes('starlink') || codigo === "2")) {
+          starlink_inicio = fechas.querySelector('.starlink-inicio').value;
+          starlink_fin = fechas.querySelector('.starlink-fin').value;
+          if (!starlink_inicio || !starlink_fin) {
+            msg.textContent = 'Debes ingresar fecha y hora de inicio y fin para Internet Starlink.';
+            msg.className = 'error';
+            return;
+          }
+        }
+        if (cantidad <= 0) {
+          msg.textContent = `Cantidad inválida para el producto "${producto}"`;
+          msg.className = 'error';
+          return;
+        }
+        if (!producto) {
+          msg.textContent = 'Producto vacío en una fila';
+          msg.className = 'error';
+          return;
+        }
+        productosVenta.push({
+          producto, codigo, categoria, tipo, unidad, cantidad, precio_unitario, descuento, itbms, subtotal,
+          ...(starlink_inicio && { starlink_inicio }),
+          ...(starlink_fin && { starlink_fin })
+        });
+      }
+      const subtotalVenta = parseFloat(document.getElementById('venta-subtotal').textContent);
+      const descuentoVenta = parseFloat(document.getElementById('venta-descuento').textContent);
+      const itbmsVenta = parseFloat(document.getElementById('venta-itbms').textContent);
+      const totalVenta = parseFloat(document.getElementById('venta-total').textContent);
+      try {
+        const res = await fetch("https://us-central1-servicios-em.cloudfunctions.net/registrarVenta", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clienteId,
+            clienteNombre,
+            formaPago,
+            abono,
+            saldoPendiente,
+            productos: productosVenta,
+            subtotal: subtotalVenta,
+            descuento: descuentoVenta,
+            itbms: itbmsVenta,
+            total: totalVenta,
+            cajera: "Miranda Etelvina",
+            horaInicio: horaInicioSesion
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          msg.textContent = 'Error al registrar la venta: ' + (data.error || 'Error desconocido');
+          msg.className = 'error';
+          return;
+        }
+        msg.textContent = 'Venta registrada correctamente.';
+        msg.className = '';
+        limpiarFormularioVenta();
+        await cargarClientes();
+      } catch (e) {
+        msg.textContent = 'Error al registrar la venta: ' + e.message;
+        msg.className = 'error';
+      }
+    }
+    function limpiarFormularioVenta() {
+      document.getElementById('select-cliente').value = '';
+      document.getElementById('contenedor-filas-ventas').innerHTML = '';
+      document.getElementById('venta-subtotal').textContent = '0.00';
+      document.getElementById('venta-descuento').textContent = '0.00';
+      document.getElementById('venta-itbms').textContent = '0.00';
+      document.getElementById('venta-total').textContent = '0.00';
+      document.getElementById('forma-pago').value = 'Efectivo';
+      document.getElementById('abono').value = 0;
+      document.getElementById('saldo-pendiente').value = 0;
+    }
+  </script>
+</body>
+</html>
