@@ -274,7 +274,13 @@ button:hover {
 .ventas-dia-btn:hover {
   background: #2179b8;
 }
+.ventas-dia-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
 table.ventas-dia-table {
+  min-width: 950px;
   width: 100%;
   border-collapse: collapse;
   background: #eaf6ff;
@@ -314,11 +320,11 @@ table.ventas-dia-table tr:nth-child(even) {
   background: #b71a3a;
 }
 
-/* RESPONSIVE MOBILE STYLES */
+/* --- RESPONSIVE MOBILE STYLES --- */
 @media (max-width: 650px) {
   .main-panel, .ventas-dia-panel {
-    max-width: 98vw;
-    padding: 2vw 2vw 3vw 2vw;
+    max-width: 99vw;
+    padding: 2vw 2vw 3vw 2vw !important;
     border-radius: 12px;
   }
   input, select, textarea, button {
@@ -335,8 +341,14 @@ table.ventas-dia-table tr:nth-child(even) {
     width: 95vw !important;
     left: 0;
   }
+  /* --- Horizontal fields for venta-bloque --- */
   .venta-bloque {
-    display: block;
+    display: flex !important;
+    flex-wrap: wrap;
+    flex-direction: row !important;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
     width: 97vw;
     margin-bottom: 12px;
     border-radius: 10px;
@@ -344,17 +356,44 @@ table.ventas-dia-table tr:nth-child(even) {
     padding: 10px;
     background: #f9fafc;
   }
-  .venta-bloque > div, .venta-bloque label, .venta-bloque input, .venta-bloque select {
-    width: 95vw !important;
-    display: block;
+  .venta-bloque > div {
+    width: 46vw !important;
+    min-width: 140px;
+    max-width: 48vw;
     margin-bottom: 7px;
   }
-  table.ventas-dia-table,
+  .venta-bloque label,
+  .venta-bloque input,
+  .venta-bloque select {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .venta-bloque .starlink-fechas {
+    width: 90vw !important;
+    flex-direction: row;
+    gap: 8px;
+  }
+  .eliminar-btn {
+    width: 46vw !important;
+    max-width: 48vw;
+    margin-bottom: 7px;
+  }
+  .ventas-dia-panel {
+    padding: 12px 2vw 12px 2vw !important;
+  }
+  .ventas-dia-table-container {
+    max-width: 98vw;
+    overflow-x: auto;
+  }
+  table.ventas-dia-table {
+    min-width: 750px;
+    font-size: 0.89em;
+  }
   table.ventas-dia-table th,
   table.ventas-dia-table td {
-    font-size: 0.89em;
-    padding: 4px 1px;
-    word-break: break-word;
+    padding: 5px 2px;
+    font-size: 0.95em;
   }
   .marquesina {
     font-size: 1.3em;
@@ -370,6 +409,29 @@ table.ventas-dia-table tr:nth-child(even) {
     max-width: 95vw;
     padding: 18px 10px 13px 10px;
     border-radius: 12px;
+  }
+  /* --- TAB ARREGLO FINAL (scroll horizontal, texto completo, NO puntos suspensivos) --- */
+  .tabs {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    padding: 0 0 0 0;
+    border-radius: 0 0 0 0;
+    justify-content: flex-start;
+  }
+  .tab-btn {
+    flex: 0 0 auto;
+    min-width: 190px;
+    font-size: 1.07em;
+    padding: 14px 0;
+    margin: 0 2px;
+    white-space: nowrap;
+    text-overflow: clip;
+    overflow: visible;
   }
 }
   </style>
@@ -447,24 +509,25 @@ table.ventas-dia-table tr:nth-child(even) {
     </div>
     <p id="venta-mensaje"></p>
   </div>
-  <div class="tab-content" id="tab-ventas-dia">
-    <!-- ESTE ES TU PANEL BONITO PARA BUSCAR POR FECHA -->
-    <div class="ventas-dia-panel" style="background:#fffbe6;border-radius:16px;box-shadow:0 2px 14px #0002;max-width:1200px;padding:32px 42px 32px 42px;margin:38px auto; display:block;">
+<div class="tab-content" id="tab-ventas-dia">
+    <div class="ventas-dia-panel" style="display:block;">
       <h2 style="color:#6a348f; font-size:2em; font-weight:bold; margin-bottom:24px;">Buscar ventas por fecha</h2>
       <div style="margin-bottom:22px;">
         <label for="fecha-ventas-dia" style="color:#5c3c92;font-size:1.18em;font-weight:bold;">Fecha de ventas:</label>
       </div>
-      <div style="display:flex;align-items:center;gap:22px;">
-        <input type="date" id="fecha-ventas-dia" style="font-size:1.2em;padding:13px 18px;border-radius:10px;border:1px solid #bce0f8;width:280px;background:#eaf6ff;" placeholder="Selecciona la fecha">
-        <button class="ventas-dia-btn" style="font-size:1.25em;padding:13px 0;width:340px;background:linear-gradient(90deg,#232b66,#5c3c92);color:#fff;font-weight:bold;border-radius:10px;border:none;box-shadow:0 2px 8px #232b6644;" onclick="mostrarVentasDelDia(true)">Buscar</button>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:22px;">
+        <input type="date" id="fecha-ventas-dia" style="font-size:1.2em;padding:13px 18px;border-radius:10px;border:1px solid #bce0f8;max-width:280px;width:98vw;background:#eaf6ff;" placeholder="Selecciona la fecha">
+        <button class="ventas-dia-btn" style="font-size:1.25em;padding:13px 0;max-width:340px;width:98vw;background:linear-gradient(90deg,#232b66,#5c3c92);color:#fff;font-weight:bold;border-radius:10px;border:none;box-shadow:0 2px 8px #232b6644;" onclick="mostrarVentasDelDia(true)">Buscar</button>
+        <button class="ventas-dia-btn" id="btnResumenVentas" style="font-size:1.12em;padding:13px 0;max-width:180px;width:44vw;background:#58b6ff;color:#fff;border-radius:10px;border:none;box-shadow:0 2px 8px #232b6644;" onclick="mostrarResumenVentas()">Mostrar resumen</button>
       </div>
-      <div id="ventasDiaTabla" style="margin-top:34px;"></div>
+      <div id="resumenVentasDia" style="margin:18px 0 12px 0;display:none;background:#e4f0fa;border-radius:10px;padding:13px 17px;color:#6a348f;font-size:1.23em;font-weight:bold;box-shadow:0 2px 10px #0001;"></div>
+      <div class="ventas-dia-table-container">
+        <div id="ventasDiaTabla" style="margin-top:34px;"></div>
+      </div>
     </div>
   </div>
-</div>
 <script>
-    
-    // LÓGICA PRINCIPAL DE CAJERA
+      // LÓGICA PRINCIPAL DE CAJERA
     let horaInicioSesion = '';
     async function loginCajera() {
       const usuario = document.getElementById('login-usuario').value.trim();
@@ -526,100 +589,132 @@ table.ventas-dia-table tr:nth-child(even) {
       }
     }
     // VENTAS DEL DÍA DE LA CAJERA desde la colección ventas
-async function mostrarVentasDelDia() {
-  const ventasTabla = document.getElementById('ventasDiaTabla');
-  ventasTabla.innerHTML = '<div style="text-align:center;margin-top:18px;">Cargando ventas...</div>';
-  const cajera = localStorage.getItem('nombreCajera');
+    // NUEVO: buffer para guardar ventas del día
+               // ... Resto del código igual (clientes, ventas, etc) ...
+ let ventasDelDiaBuffer = [];
+    let ventasTotalesBuffer = [];
 
-  let fechaBuscar = document.getElementById('fecha-ventas-dia').value;
-  // Si el navegador da MM/DD/YYYY, conviértelo a YYYY-MM-DD
-  // Normalmente el input date da "YYYY-MM-DD" pero por compatibilidad lo forzamos:
-  if (fechaBuscar && fechaBuscar.includes('/')) {
-    const parts = fechaBuscar.split('/');
-    // MM/DD/YYYY --> YYYY-MM-DD
-    fechaBuscar = `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
-  }
+    async function mostrarVentasDelDia() {
+      const ventasTabla = document.getElementById('ventasDiaTabla');
+      ventasTabla.innerHTML = '<div style="text-align:center;margin-top:18px;">Cargando ventas...</div>';
+      document.getElementById('resumenVentasDia').style.display = 'none';
+      ventasDelDiaBuffer = [];
 
-  // Debug
-  console.log('Cajera enviada:', cajera);
-  console.log('Fecha enviada:', fechaBuscar);
-
-  if (!fechaBuscar) {
-    ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">Selecciona una fecha primero.</div>';
-    return;
-  }
-  try {
-    const res = await fetch(`https://us-central1-servicios-em.cloudfunctions.net/obtenerVentasDelDia?cajera=${encodeURIComponent(cajera)}&fecha=${fechaBuscar}`);
-    if (!res.ok) {
-      const errorText = await res.text();
-      ventasTabla.innerHTML = `<div style="text-align:center;color:#d72660;font-weight:bold;">Error del servidor: ${errorText}</div>`;
-      return;
-    }
-    const data = await res.json();
-    if (!data.ventas || data.ventas.length === 0) {
-      ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">No hay ventas registradas en ese día.</div>';
-      return;
-    }
-    let html = `<table class="ventas-dia-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Cliente</th>
-          <th>Productos</th>
-          <th>Subtotal</th>
-          <th>Descuento</th>
-          <th>ITBMS</th>
-          <th>Total</th>
-          <th>Forma Pago</th>
-          <th>Abono</th>
-          <th>Saldo</th>
-          <th>Hora</th>
-        </tr>
-      </thead>
-      <tbody>`;
-    data.ventas.forEach((venta, idx) => {
-      let productos = "";
-      if (Array.isArray(venta.productos)) {
-        productos = venta.productos.map(p => {
-          let texto = `${p.producto} (${p.cantidad})`;
-          if (p.producto && p.producto.toLowerCase().includes("starlink") && p.starlink_inicio && p.starlink_fin) {
-            texto += `<br><span style="color:#2179b8;font-size:0.97em;"><b>Inicio:</b> ${p.starlink_inicio} <b>Fin:</b> ${p.starlink_fin}</span>`;
+      const cajera = localStorage.getItem('nombreCajera');
+      let fechaBuscar = document.getElementById('fecha-ventas-dia').value;
+      if (fechaBuscar && fechaBuscar.includes('/')) {
+        const parts = fechaBuscar.split('/');
+        fechaBuscar = `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
+      }
+      if (!fechaBuscar) {
+        ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">Selecciona una fecha primero.</div>';
+        return;
+      }
+      try {
+        const res = await fetch(`https://us-central1-servicios-em.cloudfunctions.net/obtenerVentasDelDia?cajera=${encodeURIComponent(cajera)}&fecha=${fechaBuscar}`);
+        if (!res.ok) {
+          const errorText = await res.text();
+          ventasTabla.innerHTML = `<div style="text-align:center;color:#d72660;font-weight:bold;">Error del servidor: ${errorText}</div>`;
+          ventasDelDiaBuffer = [];
+          return;
+        }
+        const data = await res.json();
+        ventasDelDiaBuffer = Array.isArray(data.ventas) ? data.ventas : [];
+        if (!ventasDelDiaBuffer.length) {
+          ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">No hay ventas registradas en ese día.</div>';
+          return;
+        }
+        let html = `<table class="ventas-dia-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Productos</th>
+              <th>Subtotal</th>
+              <th>Descuento</th>
+              <th>ITBMS</th>
+              <th>Total</th>
+              <th>Forma Pago</th>
+              <th>Abono</th>
+              <th>Saldo</th>
+              <th>Hora</th>
+            </tr>
+          </thead>
+          <tbody>`;
+        ventasDelDiaBuffer.forEach((venta, idx) => {
+          let productos = "";
+          if (Array.isArray(venta.productos)) {
+            productos = venta.productos.map(p => {
+              let texto = `${p.producto} (${p.cantidad})`;
+              if (p.producto && p.producto.toLowerCase().includes("starlink") && p.starlink_inicio && p.starlink_fin) {
+                texto += `<br><span style="color:#2179b8;font-size:0.97em;"><b>Inicio:</b> ${p.starlink_inicio} <b>Fin:</b> ${p.starlink_fin}</span>`;
+              }
+              return texto;
+            }).join("<br>");
+          } else {
+            productos = venta.productos;
           }
-          return texto;
-        }).join("<br>");
-      } else {
-        productos = venta.productos;
+          let hora = "-";
+          if (venta.fechaRegistro && venta.fechaRegistro.seconds) {
+            const d = new Date(venta.fechaRegistro.seconds * 1000);
+            hora = d.toLocaleString('es-PA', { timeZone: 'America/Panama', hour: '2-digit', minute: '2-digit', second: '2-digit', year: 'numeric', month: 'short', day: 'numeric' });
+          } else if (venta.horaRegistro) {
+            hora = venta.horaRegistro;
+          }
+          html += `<tr>
+            <td>${idx+1}</td>
+            <td>${venta.clienteNombre || venta.cliente || '-'}</td>
+            <td>${productos}</td>
+            <td>${Number(venta.subtotal).toFixed(2)}</td>
+            <td>${Number(venta.descuento).toFixed(2)}</td>
+            <td>${Number(venta.itbms).toFixed(2)}</td>
+            <td>${Number(venta.total).toFixed(2)}</td>
+            <td>${venta.formaPago || '-'}</td>
+            <td>${Number(venta.abono||0).toFixed(2)}</td>
+            <td>${Number(venta.saldoPendiente||0).toFixed(2)}</td>
+            <td>${hora}</td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        ventasTabla.innerHTML = html;
+      } catch (e) {
+        ventasTabla.innerHTML = `<div style="text-align:center;color:#d72660;font-weight:bold;">Error al cargar ventas del día: ${e.message}</div>`;
+        ventasDelDiaBuffer = [];
       }
-      let hora = "-";
-      if (venta.fechaRegistro && venta.fechaRegistro.seconds) {
-        const d = new Date(venta.fechaRegistro.seconds * 1000);
-        hora = d.toLocaleString('es-PA', { timeZone: 'America/Panama', hour: '2-digit', minute: '2-digit', second: '2-digit', year: 'numeric', month: 'short', day: 'numeric' });
-      } else if (venta.horaRegistro) {
-        hora = venta.horaRegistro;
+    }
+
+    async function mostrarResumenVentas() {
+      const resumen = document.getElementById('resumenVentasDia');
+
+      // Totales del día
+      const totalVentasDia = ventasDelDiaBuffer.length;
+      const totalVendidoDia = ventasDelDiaBuffer.reduce((acc, venta) => acc + (Number(venta.total) || 0), 0);
+
+      // Totales acumulados (histórico)
+      if (!ventasTotalesBuffer.length) {
+        try {
+          const res = await fetch('https://us-central1-servicios-em.cloudfunctions.net/obtenerVentasTotales');
+          const data = await res.json();
+          ventasTotalesBuffer = Array.isArray(data.ventas) ? data.ventas : [];
+        } catch (e) {
+          resumen.style.display = 'block';
+          resumen.innerHTML = `<span style="color:#d72660;">No se pudo cargar las ventas totales.</span>`;
+          return;
+        }
       }
-      html += `<tr>
-        <td>${idx+1}</td>
-        <td>${venta.clienteNombre || venta.cliente || '-'}</td>
-        <td>${productos}</td>
-        <td>${Number(venta.subtotal).toFixed(2)}</td>
-        <td>${Number(venta.descuento).toFixed(2)}</td>
-        <td>${Number(venta.itbms).toFixed(2)}</td>
-        <td>${Number(venta.total).toFixed(2)}</td>
-        <td>${venta.formaPago || '-'}</td>
-        <td>${Number(venta.abono||0).toFixed(2)}</td>
-        <td>${Number(venta.saldoPendiente||0).toFixed(2)}</td>
-        <td>${hora}</td>
-      </tr>`;
-    });
-    html += '</tbody></table>';
-    ventasTabla.innerHTML = html;
-  } catch (e) {
-    ventasTabla.innerHTML = `<div style="text-align:center;color:#d72660;font-weight:bold;">Error al cargar ventas del día: ${e.message}</div>`;
-  }
-}
-   
-           // ... Resto del código igual (clientes, ventas, etc) ...
-    let listaClientes = [];
+
+      const totalFacturas = ventasTotalesBuffer.length;
+      const totalVendido = ventasTotalesBuffer.reduce((acc, venta) => acc + (Number(venta.total) || 0), 0);
+
+      resumen.style.display = 'block';
+      resumen.innerHTML = `
+        <span>Total de facturas del día: <b>${totalVentasDia}</b></span><br>
+        <span>Total vendido hoy: <b>$${totalVendidoDia.toFixed(2)}</b></span><br><br>
+        <span>Total de facturas registradas: <b>${totalFacturas}</b></span><br>
+        <span>Total vendido en todo el sistema: <b>$${totalVendido.toFixed(2)}</b></span>
+      `;
+    }    
+let listaClientes = [];
     async function cargarClientes() {
       let clientesCache = localStorage.getItem('clientes');
       if (clientesCache) {
