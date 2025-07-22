@@ -6,402 +6,464 @@
   <title>Servicios EM | Punto de Venta</title>
   <style>
     :root {
-      --azul-claro: #e4f0fa;
-      --azul-fondo: #d5eaf8;
-      --azul-borde: #bce0f8;
-      --azul-titulo: #58b6ff;
-      --azul-campo: #eaf6ff;
-      --morado: #6a348f;
-      --amarillo: #f9d423;
-      --rosa: #ff4e50;
-      --blanco: #fffbe6;
-      --fondo: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
-      --marquesina: linear-gradient(90deg, #232b66 0%, #d72660 100%);
-    }
-    body {
-      background: var(--fondo);
-      min-height: 100vh;
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
-    .marquesina {
-      width: 100vw;
-      padding: 22px 0 18px 0;
-      background: var(--marquesina);
-      text-align: center;
-      color: #fff;
-      font-size: 2.2em;
-      font-weight: bold;
-      letter-spacing: 2.5px;
-      box-shadow: 0 4px 16px #0002;
-      margin-bottom: 0;
-    }
-    .cajera-bar {
-      background: #fffbe6;
-      color: #4e4376;
-      font-weight: bold;
-      font-size: 1.16em;
-      box-shadow: 0 2px 8px #232b6644;
-      margin-bottom: 0;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      padding: 10px 0 8px 0;
-      text-align: center;
-    }
-    .logout-btn {
-      background: #d72660;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 8px 24px;
-      font-size: 1em;
-      margin-left: 14px;
-      transition: background 0.18s;
-    }
-    .logout-btn:hover {
-      background: #b71a3a;
-    }
-    .login-panel {
-      background: #fffbe6;
-      max-width: 360px;
-      margin: 70px auto 0 auto;
-      padding: 34px 25px 28px 25px;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px #0002;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 11px;
-    }
-    .login-panel label {
-      font-weight: bold;
-      color: var(--morado);
-      font-size: 1.08em;
-      margin-bottom: 3px;
-    }
-    .login-panel input {
-      border-radius: 7px;
-      border: 1px solid #e0e0e0;
-      padding: 7px 10px;
-      font-size: 1em;
-      background: #f9fafc;
-      width: 98%;
-      margin-bottom: 10px;
-    }
-    .login-btn {
-      background: linear-gradient(90deg, #232b66 60%, #d72660 100%);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      height: 40px;
-      font-size: 1.13em;
-      margin-top: 8px;
-    }
-    .login-btn:hover {
-      background: linear-gradient(90deg, #d72660 60%, #232b66 100%);
-    }
-    .login-error {
-      color: #d72660;
-      font-weight: bold;
-      margin-top: 3px;
-      margin-bottom: 0;
-    }
-    .main-panel {
-      background: #fffbe6;
-      border-radius: 22px;
-      margin: 36px auto;
-      max-width: 1000px;
-      box-shadow: 0 4px 24px #0002;
-      padding: 0 0 36px 0;
-      position: relative;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      border-radius: 22px 22px 0 0;
-      overflow: hidden;
-      background: #f9d423;
-      box-shadow: 0 2px 7px #ffd6e033;
-    }
-    .tab-btn {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      font-size: 1.18em;
-      font-weight: bold;
-      color: #5c3c92;
-      padding: 20px 0;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s;
-      letter-spacing: 1.2px;
-    }
-    .tab-btn.active, .tab-btn:hover {
-      background: var(--marquesina);
-      color: #fff;
-    }
-    .tab-content {
-      display: none;
-      padding: 32px 38px 0 38px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    .error {
-      color: #d72660;
-      font-weight: bold;
-      font-size: 1.08em;
-      padding-left: 5px;
-    }
-    label {
-      font-weight: bold;
-      color: #4527a0;
-      font-size: 1.06em;
-      margin-top: 10px;
-      display: block;
-    }
-    input, select, textarea, button {
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      font-size: 1em;
-      background: #f9fafc;
-      box-sizing: border-box;
-      margin-top: 4px;
-      margin-bottom: 10px;
-      padding: 9px 11px;
-      width: 320px;
-    }
-    textarea { min-height: 55px; }
-    button {
-      background: linear-gradient(90deg, #2b5876 40%, #4e4376 100%);
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-      width: 100%;
-      height: 38px;
-    }
-    button:hover {
-      background: linear-gradient(90deg, #4e4376 10%, #2b5876 90%);
-      transform: translateY(-2px) scale(1.03);
-    }
-    .autocomplete-list-clientes {
-      position: absolute;
-      left: 0;
-      top: 54px;
-      width: 320px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      background: #fffbe6;
-      border: 1px solid #e0e0e0;
-      border-radius: 7px;
-      z-index: 10;
-      display: none;
-      max-height: 210px;
-      overflow-y: auto;
-      box-shadow: 0 2px 10px #0002;
-    }
-    .autocomplete-list-clientes li {
-      padding: 9px;
-      cursor: pointer;
-    }
-    .autocomplete-list-clientes li:hover {
-      background: #e4f0fa;
-      color: #2179b8;
-    }
-    .buscar-cliente-btn {
-      margin-left: 8px;
-      background: #58b6ff;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 8px;
-      border: none;
-      padding: 9px 18px;
-      cursor: pointer;
-      font-size: 1em;
-      transition: background 0.18s;
-      vertical-align: middle;
-    }
-    .buscar-cliente-btn:hover {
-      background: #2179b8;
-    }
-    .cliente-error-msg {
-      color: #d72660;
-      font-weight: bold;
-      margin-top: 4px;
-      margin-bottom: 0;
-      font-size: 1em;
-    }
-    .ventas-dia-panel {
-      background: #fffbe6;
-      border-radius: 16px;
-      box-shadow: 0 2px 14px #0002;
-      margin: 38px auto 18px auto;
-      max-width: 980px;
-      padding: 28px 22px 22px 22px;
-      display: none;
-    }
-    .ventas-dia-title {
-      color: #6a348f;
-      font-size: 1.35em;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-    .ventas-dia-btn {
-      background: #58b6ff;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 8px;
-      border: none;
-      padding: 10px 26px;
-      cursor: pointer;
-      font-size: 1.09em;
-      margin-bottom: 22px;
-      transition: background 0.18s;
-    }
-    .ventas-dia-btn:hover {
-      background: #2179b8;
-    }
-    table.ventas-dia-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #eaf6ff;
-      margin-top: 16px;
-      font-size: 1em;
-    }
-    table.ventas-dia-table th, table.ventas-dia-table td {
-      border: 1px solid #bce0f8;
-      padding: 8px 4px;
-      text-align: center;
-    }
-    table.ventas-dia-table th {
-      background: #58b6ff;
-      color: #fff;
-      font-weight: bold;
-    }
-    table.ventas-dia-table tr:nth-child(even) {
-      background: #f9fafc;
-    }
-    .ventas-dia-close {
-      float: right;
-      background: #d72660;
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1em;
-      padding: 6px 16px;
-      margin-bottom: 10px;
-      transition: background 0.18s;
-    }
-    .ventas-dia-close:hover {
-      background: #b71a3a;
-    }
-    @media (max-width: 650px) {
-      .ventas-dia-panel {
-        padding: 6vw 2vw 8vw 2vw;
-        max-width: 100vw;
-      }
-      .ventas-dia-title {font-size:1.13em;}
-      table.ventas-dia-table th, table.ventas-dia-table td {font-size:0.92em; padding:6px 2px;}
-    }
+  --azul-claro: #e4f0fa;
+  --azul-fondo: #d5eaf8;
+  --azul-borde: #bce0f8;
+  --azul-titulo: #58b6ff;
+  --azul-campo: #eaf6ff;
+  --morado: #6a348f;
+  --amarillo: #f9d423;
+  --rosa: #ff4e50;
+  --blanco: #fffbe6;
+  --fondo: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+  --marquesina: linear-gradient(90deg, #232b66 0%, #d72660 100%);
+}
+body {
+  background: var(--fondo);
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.marquesina {
+  width: 100vw;
+  padding: 22px 0 18px 0;
+  background: var(--marquesina);
+  text-align: center;
+  color: #fff;
+  font-size: 2.2em;
+  font-weight: bold;
+  letter-spacing: 2.5px;
+  box-shadow: 0 4px 16px #0002;
+  margin-bottom: 0;
+}
+.cajera-bar {
+  background: #fffbe6;
+  color: #4e4376;
+  font-weight: bold;
+  font-size: 1.16em;
+  box-shadow: 0 2px 8px #232b6644;
+  margin-bottom: 0;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 0 8px 0;
+  text-align: center;
+}
+.logout-btn {
+  background: #d72660;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px 24px;
+  font-size: 1em;
+  margin-left: 14px;
+  transition: background 0.18s;
+}
+.logout-btn:hover {
+  background: #b71a3a;
+}
+.login-panel {
+  background: #fffbe6;
+  max-width: 360px;
+  margin: 70px auto 0 auto;
+  padding: 34px 25px 28px 25px;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0002;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+}
+.login-panel label {
+  font-weight: bold;
+  color: var(--morado);
+  font-size: 1.08em;
+  margin-bottom: 3px;
+}
+.login-panel input {
+  border-radius: 7px;
+  border: 1px solid #e0e0e0;
+  padding: 7px 10px;
+  font-size: 1em;
+  background: #f9fafc;
+  width: 98%;
+  margin-bottom: 10px;
+}
+.login-btn {
+  background: linear-gradient(90deg, #232b66 60%, #d72660 100%);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  height: 40px;
+  font-size: 1.13em;
+  margin-top: 8px;
+}
+.login-btn:hover {
+  background: linear-gradient(90deg, #d72660 60%, #232b66 100%);
+}
+.login-error {
+  color: #d72660;
+  font-weight: bold;
+  margin-top: 3px;
+  margin-bottom: 0;
+}
+.main-panel {
+  background: #fffbe6;
+  border-radius: 22px;
+  margin: 36px auto;
+  max-width: 1000px;
+  box-shadow: 0 4px 24px #0002;
+  padding: 0 0 36px 0;
+  position: relative;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border-radius: 22px 22px 0 0;
+  overflow: hidden;
+  background: #f9d423;
+  box-shadow: 0 2px 7px #ffd6e033;
+}
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1.18em;
+  font-weight: bold;
+  color: #5c3c92;
+  padding: 20px 0;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  letter-spacing: 1.2px;
+}
+.tab-btn.active, .tab-btn:hover {
+  background: var(--marquesina);
+  color: #fff;
+}
+.tab-content {
+  display: none;
+  padding: 32px 38px 0 38px;
+}
+.tab-content.active {
+  display: block;
+}
+.error {
+  color: #d72660;
+  font-weight: bold;
+  font-size: 1.08em;
+  padding-left: 5px;
+}
+label {
+  font-weight: bold;
+  color: #4527a0;
+  font-size: 1.06em;
+  margin-top: 10px;
+  display: block;
+}
+input, select, textarea, button {
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-size: 1em;
+  background: #f9fafc;
+  box-sizing: border-box;
+  margin-top: 4px;
+  margin-bottom: 10px;
+  padding: 9px 11px;
+  width: 320px;
+  max-width: 100%;
+}
+textarea { min-height: 55px; }
+button {
+  background: linear-gradient(90deg, #2b5876 40%, #4e4376 100%);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  height: 38px;
+}
+button:hover {
+  background: linear-gradient(90deg, #4e4376 10%, #2b5876 90%);
+  transform: translateY(-2px) scale(1.03);
+}
+.autocomplete-list-clientes {
+  position: absolute;
+  left: 0;
+  top: 54px;
+  width: 320px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #fffbe6;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
+  z-index: 10;
+  display: none;
+  max-height: 210px;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px #0002;
+}
+.autocomplete-list-clientes li {
+  padding: 9px;
+  cursor: pointer;
+}
+.autocomplete-list-clientes li:hover {
+  background: #e4f0fa;
+  color: #2179b8;
+}
+.buscar-cliente-btn {
+  margin-left: 8px;
+  background: #58b6ff;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  padding: 9px 18px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.18s;
+  vertical-align: middle;
+}
+.buscar-cliente-btn:hover {
+  background: #2179b8;
+}
+.cliente-error-msg {
+  color: #d72660;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-size: 1em;
+}
+.ventas-dia-panel {
+  background: #fffbe6;
+  border-radius: 16px;
+  box-shadow: 0 2px 14px #0002;
+  margin: 38px auto 18px auto;
+  max-width: 980px;
+  padding: 28px 22px 22px 22px;
+  display: none;
+}
+.ventas-dia-title {
+  color: #6a348f;
+  font-size: 1.35em;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+.ventas-dia-btn {
+  background: #58b6ff;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  padding: 10px 26px;
+  cursor: pointer;
+  font-size: 1.09em;
+  margin-bottom: 22px;
+  transition: background 0.18s;
+}
+.ventas-dia-btn:hover {
+  background: #2179b8;
+}
+table.ventas-dia-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #eaf6ff;
+  margin-top: 16px;
+  font-size: 1em;
+  table-layout: fixed;
+  word-break: break-word;
+}
+table.ventas-dia-table th, table.ventas-dia-table td {
+  border: 1px solid #bce0f8;
+  padding: 8px 4px;
+  text-align: center;
+  word-break: break-word;
+}
+table.ventas-dia-table th {
+  background: #58b6ff;
+  color: #fff;
+  font-weight: bold;
+}
+table.ventas-dia-table tr:nth-child(even) {
+  background: #f9fafc;
+}
+.ventas-dia-close {
+  float: right;
+  background: #d72660;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 6px 16px;
+  margin-bottom: 10px;
+  transition: background 0.18s;
+}
+.ventas-dia-close:hover {
+  background: #b71a3a;
+}
+
+/* RESPONSIVE MOBILE STYLES */
+@media (max-width: 650px) {
+  .main-panel, .ventas-dia-panel {
+    max-width: 98vw;
+    padding: 2vw 2vw 3vw 2vw;
+    border-radius: 12px;
+  }
+  input, select, textarea, button {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    font-size: 1em;
+    margin-top: 8px;
+    margin-bottom: 7px;
+  }
+  .tab-content {
+    padding: 12px 2vw 0 2vw;
+  }
+  .autocomplete-list-clientes {
+    width: 95vw !important;
+    left: 0;
+  }
+  .venta-bloque {
+    display: block;
+    width: 97vw;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0001;
+    padding: 10px;
+    background: #f9fafc;
+  }
+  .venta-bloque > div, .venta-bloque label, .venta-bloque input, .venta-bloque select {
+    width: 95vw !important;
+    display: block;
+    margin-bottom: 7px;
+  }
+  table.ventas-dia-table,
+  table.ventas-dia-table th,
+  table.ventas-dia-table td {
+    font-size: 0.89em;
+    padding: 4px 1px;
+    word-break: break-word;
+  }
+  .marquesina {
+    font-size: 1.3em;
+    padding: 14px 0 13px 0;
+  }
+  .cajera-bar {
+    font-size: 1em;
+    flex-direction: column;
+    gap: 6px;
+    padding: 7px 0 7px 0;
+  }
+  .login-panel {
+    max-width: 95vw;
+    padding: 18px 10px 13px 10px;
+    border-radius: 12px;
+  }
+}
   </style>
 </head>
 <body>
   <div class="marquesina">Servicios EM - Punto de Venta</div>
-  <div class="cajera-bar" id="cajeraBar" style="display:none;">
-    <span>Cajera: <span id="nombreCajera"></span></span>
-    <span>|</span>
-    <span>Inicio de turno: <span id="horaInicio"></span></span>
-    <button class="logout-btn" onclick="logoutCajera()">Cerrar sesión</button>
+<div class="cajera-bar" id="cajeraBar" style="display:none;">
+  <span>Cajera: <span id="nombreCajera"></span></span>
+  <span>|</span>
+  <span>Inicio de turno: <span id="horaInicio"></span></span>
+  <button class="logout-btn" onclick="logoutCajera()">Cerrar sesión</button>
+</div>
+<div id="login-box" class="login-panel">
+  <label for="login-usuario">Usuario (email de la cajera):</label>
+  <input type="email" id="login-usuario" placeholder="Correo electrónico" autocomplete="username" />
+  <label for="login-pass">Contraseña:</label>
+  <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"/>
+  <button class="login-btn" onclick="loginCajera()">Ingresar</button>
+  <p id="login-error" class="login-error"></p>
+</div>
+<div id="main-panel" class="main-panel" style="display:none;">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab(0)">Registrar Cliente</button>
+    <button class="tab-btn" onclick="showTab(1)">Registrar Venta</button>
+    <button class="tab-btn" onclick="showTab(2)">Ventas del Día</button>
   </div>
-  <div id="login-box" class="login-panel">
-    <label for="login-usuario">Usuario (email de la cajera):</label>
-    <input type="email" id="login-usuario" placeholder="Correo electrónico" autocomplete="username" />
-    <label for="login-pass">Contraseña:</label>
-    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"/>
-    <button class="login-btn" onclick="loginCajera()">Ingresar</button>
-    <p id="login-error" class="login-error"></p>
+  <div class="tab-content active" id="tab-clientes">
+    <h2 style="color:#6a348f; margin-top:0;">Registrar Cliente</h2>
+    <label for="cliente-nombre">Nombre:</label>
+    <input type="text" id="cliente-nombre" placeholder="Nombre cliente" />
+    <label for="cliente-correo">Correo:</label>
+    <input type="email" id="cliente-correo" placeholder="Correo cliente" />
+    <label for="cliente-direccion">Dirección:</label>
+    <textarea id="cliente-direccion" rows="2" placeholder="Dirección cliente" style="width:320px"></textarea>
+    <label for="cliente-telefono">Teléfono:</label>
+    <input type="text" id="cliente-telefono" placeholder="Teléfono cliente" />
+    <button onclick="registrarCliente()">Registrar Cliente Nuevo</button>
+    <p id="cliente-mensaje"></p>
   </div>
-  <div id="main-panel" class="main-panel" style="display:none;">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showTab(0)">Registrar Cliente</button>
-      <button class="tab-btn" onclick="showTab(1)">Registrar Venta</button>
-      <button class="tab-btn" onclick="showTab(2)">Ventas del Día</button>
+  <div class="tab-content" id="tab-ventas">
+    <div style="margin-bottom:14px; position:relative; max-width:350px;">
+      <label style="font-weight:bold; color:#4e4376;">Buscar cliente:</label>
+      <input type="text" id="buscador-cliente" placeholder="Escribe nombre o inicial..." style="width:210px;" autocomplete="off" />
+      <button type="button" class="buscar-cliente-btn" id="btn-buscar-cliente">Buscar</button>
+      <ul id="lista-clientes-autocomplete" class="autocomplete-list-clientes"></ul>
+      <input type="hidden" id="cliente-id-seleccionado" />
+      <div id="cliente-error-msg" class="cliente-error-msg"></div>
     </div>
-    <div class="tab-content active" id="tab-clientes">
-      <h2 style="color:#6a348f; margin-top:0;">Registrar Cliente</h2>
-      <label for="cliente-nombre">Nombre:</label>
-      <input type="text" id="cliente-nombre" placeholder="Nombre cliente" />
-      <label for="cliente-correo">Correo:</label>
-      <input type="email" id="cliente-correo" placeholder="Correo cliente" />
-      <label for="cliente-direccion">Dirección:</label>
-      <textarea id="cliente-direccion" rows="2" placeholder="Dirección cliente" style="width:320px"></textarea>
-      <label for="cliente-telefono">Teléfono:</label>
-      <input type="text" id="cliente-telefono" placeholder="Teléfono cliente" />
-      <button onclick="registrarCliente()">Registrar Cliente Nuevo</button>
-      <p id="cliente-mensaje"></p>
+    <div id="contenedor-filas-ventas"></div>
+    <button onclick="agregarFilaVenta()" style="background:linear-gradient(90deg,#232b66,#5c3c92);margin-top:5px;width:220px;">Agregar Producto</button>
+    <div class="recibo-totales" id="totales-venta">
+      <div class="campo">Subtotal: <span id="venta-subtotal">0.00</span></div>
+      <div class="campo">Descuento total: <span id="venta-descuento">0.00</span></div>
+      <div class="campo">ITBMS total: <span id="venta-itbms">0.00</span></div>
+      <div class="total">TOTAL: <span id="venta-total">0.00</span></div>
+      <div class="campo" style="margin-top:11px;">
+        <label for="abono">Abono:</label>
+        <input type="number" id="abono" min="0" step="0.01" value="0" style="width:100px;"/>
+        <label for="forma-pago">Forma de pago:</label>
+        <select id="forma-pago" style="width:110px;">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Crédito">Crédito</option>
+        </select>
+        <label for="saldo-pendiente">Saldo pendiente:</label>
+        <input type="number" id="saldo-pendiente" readonly value="0" style="width:100px;"/>
+      </div>
     </div>
-    <div class="tab-content" id="tab-ventas">
-      <div style="margin-bottom:14px; position:relative; max-width:350px;">
-        <label style="font-weight:bold; color:#4e4376;">Buscar cliente:</label>
-        <input type="text" id="buscador-cliente" placeholder="Escribe nombre o inicial..." style="width:210px;" autocomplete="off" />
-        <button type="button" class="buscar-cliente-btn" id="btn-buscar-cliente">Buscar</button>
-        <ul id="lista-clientes-autocomplete" class="autocomplete-list-clientes"></ul>
-        <input type="hidden" id="cliente-id-seleccionado" />
-        <div id="cliente-error-msg" class="cliente-error-msg"></div>
-      </div>
-      <div id="contenedor-filas-ventas"></div>
-      <button onclick="agregarFilaVenta()" style="background:linear-gradient(90deg,#232b66,#5c3c92);margin-top:5px;width:220px;">Agregar Producto</button>
-      <div class="recibo-totales" id="totales-venta">
-        <div class="campo">Subtotal: <span id="venta-subtotal">0.00</span></div>
-        <div class="campo">Descuento total: <span id="venta-descuento">0.00</span></div>
-        <div class="campo">ITBMS total: <span id="venta-itbms">0.00</span></div>
-        <div class="total">TOTAL: <span id="venta-total">0.00</span></div>
-        <div class="campo" style="margin-top:11px;">
-          <label for="abono">Abono:</label>
-          <input type="number" id="abono" min="0" step="0.01" value="0" style="width:100px;"/>
-          <label for="forma-pago">Forma de pago:</label>
-          <select id="forma-pago" style="width:110px;">
-            <option value="Efectivo">Efectivo</option>
-            <option value="Tarjeta">Tarjeta</option>
-            <option value="Transferencia">Transferencia</option>
-            <option value="Crédito">Crédito</option>
-          </select>
-          <label for="saldo-pendiente">Saldo pendiente:</label>
-          <input type="number" id="saldo-pendiente" readonly value="0" style="width:100px;"/>
-        </div>
-      </div>
-      <button style="width:220px;" onclick="registrarVenta()">Registrar Venta</button>
-      <div class="recibo-footer">
-        <div class="logo">TU LOGO</div>
-        <span>Comentarios o instrucciones especiales: El pago debe realizarse en un plazo de 30 días</span>
-        <div class="gracias"><span>😊</span>Gracias por su visita!</div>
-      </div>
-      <p id="venta-mensaje"></p>
+    <button style="width:220px;" onclick="registrarVenta()">Registrar Venta</button>
+    <div class="recibo-footer">
+      <div class="logo">TU LOGO</div>
+      <span>Comentarios o instrucciones especiales: El pago debe realizarse en un plazo de 30 días</span>
+      <div class="gracias"><span>😊</span>Gracias por su visita!</div>
     </div>
-    <div class="tab-content" id="tab-ventas-dia">
-      <div class="ventas-dia-panel" id="ventasDiaPanel">
-        <button class="ventas-dia-close" onclick="document.getElementById('ventasDiaPanel').style.display='none'">Cerrar</button>
-        <div class="ventas-dia-title">Ventas del Día de la Cajera</div>
-        <div id="ventasDiaTabla"></div>
+    <p id="venta-mensaje"></p>
+  </div>
+  <div class="tab-content" id="tab-ventas-dia">
+    <!-- ESTE ES TU PANEL BONITO PARA BUSCAR POR FECHA -->
+    <div class="ventas-dia-panel" style="background:#fffbe6;border-radius:16px;box-shadow:0 2px 14px #0002;max-width:1200px;padding:32px 42px 32px 42px;margin:38px auto; display:block;">
+      <h2 style="color:#6a348f; font-size:2em; font-weight:bold; margin-bottom:24px;">Buscar ventas por fecha</h2>
+      <div style="margin-bottom:22px;">
+        <label for="fecha-ventas-dia" style="color:#5c3c92;font-size:1.18em;font-weight:bold;">Fecha de ventas:</label>
       </div>
-      <button class="ventas-dia-btn" onclick="mostrarVentasDelDia()">Mostrar Ventas del Día</button>
+      <div style="display:flex;align-items:center;gap:22px;">
+        <input type="date" id="fecha-ventas-dia" style="font-size:1.2em;padding:13px 18px;border-radius:10px;border:1px solid #bce0f8;width:280px;background:#eaf6ff;" placeholder="Selecciona la fecha">
+        <button class="ventas-dia-btn" style="font-size:1.25em;padding:13px 0;width:340px;background:linear-gradient(90deg,#232b66,#5c3c92);color:#fff;font-weight:bold;border-radius:10px;border:none;box-shadow:0 2px 8px #232b6644;" onclick="mostrarVentasDelDia(true)">Buscar</button>
+      </div>
+      <div id="ventasDiaTabla" style="margin-top:34px;"></div>
     </div>
   </div>
-  <script>
+</div>
+<script>
+    
     // LÓGICA PRINCIPAL DE CAJERA
     let horaInicioSesion = '';
     async function loginCajera() {
@@ -464,81 +526,99 @@
       }
     }
     // VENTAS DEL DÍA DE LA CAJERA desde la colección ventas
-    async function mostrarVentasDelDia() {
-      const ventasPanel = document.getElementById('ventasDiaPanel');
-      const ventasTabla = document.getElementById('ventasDiaTabla');
-      ventasPanel.style.display = 'block';
-      ventasTabla.innerHTML = '<div style="text-align:center;margin-top:18px;">Cargando ventas...</div>';
-      const cajera = localStorage.getItem('nombreCajera');
-      const hoy = new Date();
-      const fechaHoy = hoy.toISOString().slice(0,10); // formato YYYY-MM-DD
-      try {
-        const res = await fetch(`https://us-central1-servicios-em.cloudfunctions.net/obtenerVentasDelDia?cajera=${encodeURIComponent(cajera)}&fecha=${fechaHoy}`);
-        const data = await res.json();
-        if (!data.ventas || data.ventas.length === 0) {
-          ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">No hay ventas registradas hoy.</div>';
-          return;
-        }
-        let html = `<table class="ventas-dia-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Cliente</th>
-              <th>Productos</th>
-              <th>Subtotal</th>
-              <th>Descuento</th>
-              <th>ITBMS</th>
-              <th>Total</th>
-              <th>Forma Pago</th>
-              <th>Abono</th>
-              <th>Saldo</th>
-              <th>Hora</th>
-            </tr>
-          </thead>
-          <tbody>`;
-        data.ventas.forEach((venta, idx) => {
-  // productos: muestra nombre y cantidad, y si es Starlink, agrega fechas
-  let productos = "";
-  if (Array.isArray(venta.productos)) {
-    productos = venta.productos.map(p => {
-      let texto = `${p.producto} (${p.cantidad})`;
-      // Si es Starlink y tiene inicio/fin, agrega las fechas
-      if (
-        p.producto &&
-        p.producto.toLowerCase().includes("starlink") &&
-        p.starlink_inicio &&
-        p.starlink_fin
-      ) {
-        texto += `<br><span style="color:#2179b8;font-size:0.97em;">
-        <b>Inicio:</b> ${p.starlink_inicio} <b>Fin:</b> ${p.starlink_fin}
-        </span>`;
-      }
-      return texto;
-    }).join("<br>");
-  } else {
-    productos = venta.productos;
+async function mostrarVentasDelDia() {
+  const ventasTabla = document.getElementById('ventasDiaTabla');
+  ventasTabla.innerHTML = '<div style="text-align:center;margin-top:18px;">Cargando ventas...</div>';
+  const cajera = localStorage.getItem('nombreCajera');
+
+  let fechaBuscar = document.getElementById('fecha-ventas-dia').value;
+  // Si el navegador da MM/DD/YYYY, conviértelo a YYYY-MM-DD
+  // Normalmente el input date da "YYYY-MM-DD" pero por compatibilidad lo forzamos:
+  if (fechaBuscar && fechaBuscar.includes('/')) {
+    const parts = fechaBuscar.split('/');
+    // MM/DD/YYYY --> YYYY-MM-DD
+    fechaBuscar = `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
   }
-  html += `<tr>
-    <td>${idx+1}</td>
-    <td>${venta.clienteNombre || venta.cliente || '-'}</td>
-    <td>${productos}</td>
-    <td>${Number(venta.subtotal).toFixed(2)}</td>
-    <td>${Number(venta.descuento).toFixed(2)}</td>
-    <td>${Number(venta.itbms).toFixed(2)}</td>
-    <td>${Number(venta.total).toFixed(2)}</td>
-    <td>${venta.formaPago || '-'}</td>
-    <td>${Number(venta.abono||0).toFixed(2)}</td>
-    <td>${Number(venta.saldoPendiente||0).toFixed(2)}</td>
-    <td>${venta.horaRegistro || venta.horaInicio || '-'}</td>
-  </tr>`;
-});
-        html += '</tbody></table>';
-        ventasTabla.innerHTML = html;
-      } catch (e) {
-        ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">Error al cargar ventas del día.</div>';
-      }
+
+  // Debug
+  console.log('Cajera enviada:', cajera);
+  console.log('Fecha enviada:', fechaBuscar);
+
+  if (!fechaBuscar) {
+    ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">Selecciona una fecha primero.</div>';
+    return;
+  }
+  try {
+    const res = await fetch(`https://us-central1-servicios-em.cloudfunctions.net/obtenerVentasDelDia?cajera=${encodeURIComponent(cajera)}&fecha=${fechaBuscar}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      ventasTabla.innerHTML = `<div style="text-align:center;color:#d72660;font-weight:bold;">Error del servidor: ${errorText}</div>`;
+      return;
     }
-    // ... Resto del código igual (clientes, ventas, etc) ...
+    const data = await res.json();
+    if (!data.ventas || data.ventas.length === 0) {
+      ventasTabla.innerHTML = '<div style="text-align:center;color:#d72660;font-weight:bold;">No hay ventas registradas en ese día.</div>';
+      return;
+    }
+    let html = `<table class="ventas-dia-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Cliente</th>
+          <th>Productos</th>
+          <th>Subtotal</th>
+          <th>Descuento</th>
+          <th>ITBMS</th>
+          <th>Total</th>
+          <th>Forma Pago</th>
+          <th>Abono</th>
+          <th>Saldo</th>
+          <th>Hora</th>
+        </tr>
+      </thead>
+      <tbody>`;
+    data.ventas.forEach((venta, idx) => {
+      let productos = "";
+      if (Array.isArray(venta.productos)) {
+        productos = venta.productos.map(p => {
+          let texto = `${p.producto} (${p.cantidad})`;
+          if (p.producto && p.producto.toLowerCase().includes("starlink") && p.starlink_inicio && p.starlink_fin) {
+            texto += `<br><span style="color:#2179b8;font-size:0.97em;"><b>Inicio:</b> ${p.starlink_inicio} <b>Fin:</b> ${p.starlink_fin}</span>`;
+          }
+          return texto;
+        }).join("<br>");
+      } else {
+        productos = venta.productos;
+      }
+      let hora = "-";
+      if (venta.fechaRegistro && venta.fechaRegistro.seconds) {
+        const d = new Date(venta.fechaRegistro.seconds * 1000);
+        hora = d.toLocaleString('es-PA', { timeZone: 'America/Panama', hour: '2-digit', minute: '2-digit', second: '2-digit', year: 'numeric', month: 'short', day: 'numeric' });
+      } else if (venta.horaRegistro) {
+        hora = venta.horaRegistro;
+      }
+      html += `<tr>
+        <td>${idx+1}</td>
+        <td>${venta.clienteNombre || venta.cliente || '-'}</td>
+        <td>${productos}</td>
+        <td>${Number(venta.subtotal).toFixed(2)}</td>
+        <td>${Number(venta.descuento).toFixed(2)}</td>
+        <td>${Number(venta.itbms).toFixed(2)}</td>
+        <td>${Number(venta.total).toFixed(2)}</td>
+        <td>${venta.formaPago || '-'}</td>
+        <td>${Number(venta.abono||0).toFixed(2)}</td>
+        <td>${Number(venta.saldoPendiente||0).toFixed(2)}</td>
+        <td>${hora}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    ventasTabla.innerHTML = html;
+  } catch (e) {
+    ventasTabla.innerHTML = `<div style="text-align:center;color:#d72660;font-weight:bold;">Error al cargar ventas del día: ${e.message}</div>`;
+  }
+}
+   
+           // ... Resto del código igual (clientes, ventas, etc) ...
     let listaClientes = [];
     async function cargarClientes() {
       let clientesCache = localStorage.getItem('clientes');
@@ -841,100 +921,102 @@
       }
     }
     async function registrarVenta() {
-      const clienteId = document.getElementById('cliente-id-seleccionado').value;
-      const clienteNombre = document.getElementById('buscador-cliente').value;
-      const formaPago = document.getElementById('forma-pago').value;
-      const abono = parseFloat(document.getElementById('abono').value) || 0;
-      const saldoPendiente = parseFloat(document.getElementById('saldo-pendiente').value) || 0;
-      const msg = document.getElementById('venta-mensaje');
-      msg.textContent = '';
-      msg.className = '';
-      if (!clienteId) {
-        document.getElementById('cliente-error-msg').textContent = 'Selecciona un cliente válido antes de registrar la venta.';
-        return;
-      }
-      const bloques = document.querySelectorAll('.venta-bloque');
-      if (bloques.length === 0) {
-        msg.textContent = 'Agrega al menos un producto a la venta';
+  const clienteId = document.getElementById('cliente-id-seleccionado').value;
+  const clienteNombre = document.getElementById('buscador-cliente').value;
+  const formaPago = document.getElementById('forma-pago').value;
+  const abono = parseFloat(document.getElementById('abono').value) || 0;
+  const saldoPendiente = parseFloat(document.getElementById('saldo-pendiente').value) || 0;
+  const msg = document.getElementById('venta-mensaje');
+  msg.textContent = '';
+  msg.className = '';
+  if (!clienteId) {
+    document.getElementById('cliente-error-msg').textContent = 'Selecciona un cliente válido antes de registrar la venta.';
+    return;
+  }
+  const bloques = document.querySelectorAll('.venta-bloque');
+  if (bloques.length === 0) {
+    msg.textContent = 'Agrega al menos un producto a la venta';
+    msg.className = 'error';
+    return;
+  }
+  let productosVenta = [];
+  for (const bloque of bloques) {
+    const producto = bloque.querySelector('.producto').value.trim();
+    const codigo = bloque.querySelector('.codigo').value.trim();
+    const categoria = bloque.querySelector('.categoria').value.trim();
+    const tipo = bloque.querySelector('.tipo').value.trim();
+    const unidad = bloque.querySelector('.unidad').value.trim();
+    const cantidad = parseInt(bloque.querySelector('.cantidad').value) || 0;
+    const precio_unitario = parseFloat(bloque.querySelector('.precio_unitario').value) || 0;
+    const descuento = parseFloat(bloque.querySelector('.descuento').value) || 0;
+    const itbms = parseFloat(bloque.querySelector('.itbms').value) || 0;
+    const subtotal = parseFloat(bloque.querySelector('.subtotal').value) || 0;
+    let starlink_inicio = null, starlink_fin = null;
+    if (normalizarTexto(producto).includes('starlink')) {
+      starlink_inicio = bloque.querySelector('.starlink-inicio').value;
+      starlink_fin = bloque.querySelector('.starlink-fin').value;
+      if (!starlink_inicio || !starlink_fin) {
+        msg.textContent = 'Debes ingresar fecha y hora de inicio y fin para Internet Starlink.';
         msg.className = 'error';
         return;
-      }
-      let productosVenta = [];
-      for (const bloque of bloques) {
-        const producto = bloque.querySelector('.producto').value.trim();
-        const codigo = bloque.querySelector('.codigo').value.trim();
-        const categoria = bloque.querySelector('.categoria').value.trim();
-        const tipo = bloque.querySelector('.tipo').value.trim();
-        const unidad = bloque.querySelector('.unidad').value.trim();
-        const cantidad = parseInt(bloque.querySelector('.cantidad').value) || 0;
-        const precio_unitario = parseFloat(bloque.querySelector('.precio_unitario').value) || 0;
-        const descuento = parseFloat(bloque.querySelector('.descuento').value) || 0;
-        const itbms = parseFloat(bloque.querySelector('.itbms').value) || 0;
-        const subtotal = parseFloat(bloque.querySelector('.subtotal').value) || 0;
-        let starlink_inicio = null, starlink_fin = null;
-        if (normalizarTexto(producto).includes('starlink')) {
-          starlink_inicio = bloque.querySelector('.starlink-inicio').value;
-          starlink_fin = bloque.querySelector('.starlink-fin').value;
-          if (!starlink_inicio || !starlink_fin) {
-            msg.textContent = 'Debes ingresar fecha y hora de inicio y fin para Internet Starlink.';
-            msg.className = 'error';
-            return;
-          }
-        }
-        if (cantidad <= 0) {
-          msg.textContent = `Cantidad inválida para el producto "${producto}"`;
-          msg.className = 'error';
-          return;
-        }
-        if (!producto) {
-          msg.textContent = 'Producto vacío en una fila';
-          msg.className = 'error';
-          return;
-        }
-        productosVenta.push({
-          producto, codigo, categoria, tipo, unidad, cantidad, precio_unitario, descuento, itbms, subtotal,
-          ...(starlink_inicio && { starlink_inicio }),
-          ...(starlink_fin && { starlink_fin })
-        });
-      }
-      const subtotalVenta = parseFloat(document.getElementById('venta-subtotal').textContent);
-      const descuentoVenta = parseFloat(document.getElementById('venta-descuento').textContent);
-      const itbmsVenta = parseFloat(document.getElementById('venta-itbms').textContent);
-      const totalVenta = parseFloat(document.getElementById('venta-total').textContent);
-      try {
-        const res = await fetch("https://us-central1-servicios-em.cloudfunctions.net/registrarVenta", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            clienteId,
-            clienteNombre,
-            formaPago,
-            abono,
-            saldoPendiente,
-            productos: productosVenta,
-            subtotal: subtotalVenta,
-            descuento: descuentoVenta,
-            itbms: itbmsVenta,
-            total: totalVenta,
-            cajera: localStorage.getItem('nombreCajera') || "",
-            horaInicio: horaInicioSesion
-          })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          msg.textContent = 'Error al registrar la venta: ' + (data.error || 'Error desconocido');
-          msg.className = 'error';
-          return;
-        }
-        msg.textContent = 'Venta registrada correctamente.';
-        msg.className = '';
-        limpiarFormularioVenta();
-        await cargarClientes();
-      } catch (e) {
-        msg.textContent = 'Error al registrar la venta: ' + e.message;
-        msg.className = 'error';
       }
     }
+    if (cantidad <= 0) {
+      msg.textContent = `Cantidad inválida para el producto "${producto}"`;
+      msg.className = 'error';
+      return;
+    }
+    if (!producto) {
+      msg.textContent = 'Producto vacío en una fila';
+      msg.className = 'error';
+      return;
+    }
+    productosVenta.push({
+      producto, codigo, categoria, tipo, unidad, cantidad, precio_unitario, descuento, itbms, subtotal,
+      ...(starlink_inicio && { starlink_inicio }),
+      ...(starlink_fin && { starlink_fin })
+    });
+  }
+  const subtotalVenta = parseFloat(document.getElementById('venta-subtotal').textContent);
+  const descuentoVenta = parseFloat(document.getElementById('venta-descuento').textContent);
+  const itbmsVenta = parseFloat(document.getElementById('venta-itbms').textContent);
+  const totalVenta = parseFloat(document.getElementById('venta-total').textContent);
+
+  try {
+    const res = await fetch("https://us-central1-servicios-em.cloudfunctions.net/registrarVenta", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clienteId,
+        clienteNombre,
+        formaPago,
+        abono,
+        saldoPendiente,
+        productos: productosVenta,
+        subtotal: subtotalVenta,
+        descuento: descuentoVenta,
+        itbms: itbmsVenta,
+        total: totalVenta,
+        cajera: localStorage.getItem('nombreCajera') || "",
+        horaInicio: localStorage.getItem('horaInicioSesion') || ""
+        // NO ENVÍES NINGÚN CAMPO DE FECHA AQUÍ. El backend lo pone automáticamente.
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      msg.textContent = 'Error al registrar la venta: ' + (data.error || 'Error desconocido');
+      msg.className = 'error';
+      return;
+    }
+    msg.textContent = 'Venta registrada correctamente.';
+    msg.className = '';
+    limpiarFormularioVenta();
+    await cargarClientes();
+  } catch (e) {
+    msg.textContent = 'Error al registrar la venta: ' + e.message;
+    msg.className = 'error';
+  }
+}
     function limpiarFormularioVenta() {
       document.getElementById('buscador-cliente').value = '';
       document.getElementById('cliente-id-seleccionado').value = '';
