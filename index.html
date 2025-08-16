@@ -909,17 +909,59 @@ let listaClientes = [];
       `;
       contenedor.appendChild(bloque);
       function mostrarCamposStarlink() {
-        const productoValor = bloque.querySelector('.producto').value.trim();
-        const productoNorm = normalizarTexto(productoValor);
-        const fechas = bloque.querySelector('.starlink-fechas');
-        if (productoNorm.includes('starlink')) {
-          fechas.style.display = 'flex';
-        } else {
-          fechas.style.display = 'none';
-        }
-      }
-      bloque.querySelector('.producto').addEventListener('input', mostrarCamposStarlink);
-      mostrarCamposStarlink();
+  const codigoValor = bloque.querySelector('.codigo').value.trim();
+  const fechas = bloque.querySelector('.starlink-fechas');
+  const inicioInput = bloque.querySelector('.starlink-inicio');
+  const finInput = bloque.querySelector('.starlink-fin');
+
+  if (codigoValor === "1") {
+    fechas.style.display = 'flex';
+
+    // Obtener ahora
+    const ahora = new Date();
+    // Formatear fecha/hora para el input tipo datetime-local
+    function formatDatetimeLocal(date) {
+      const z = n => ('0'+n).slice(-2);
+      return date.getFullYear() + '-' +
+             z(date.getMonth()+1) + '-' +
+             z(date.getDate()) + 'T' +
+             z(date.getHours()) + ':' +
+             z(date.getMinutes());
+    }
+    // Calcular fecha fin automática
+    let finDate = new Date(ahora);
+    const horaActual = ahora.getHours() + ahora.getMinutes()/60;
+    if (horaActual >= 8 && horaActual < 15) {
+      // Rango de 8:00 am a 2:59 pm => fin 3:00 pm
+      finDate.setHours(15,0,0,0);
+    } else if (horaActual >= 15 && horaActual <= 22.5) {
+      // Rango de 3:00 pm a 10:30 pm => fin 10:30 pm
+      finDate.setHours(22,30,0,0);
+    } else if (horaActual > 22.5 || horaActual < 8) {
+      // Rango de 10:31 pm a 7:59 am => fin 8:00 am del siguiente día
+      finDate.setDate(finDate.getDate() + (horaActual > 22.5 ? 1 : 0)); // Solo suma día si después de 10:30pm
+      finDate.setHours(8,0,0,0);
+    } else {
+      // Fuera de rango, deja vacío
+      finDate = "";
+    }
+    // Solo se rellena si el usuario no ha tocado el campo
+    if (!inicioInput.value) inicioInput.value = formatDatetimeLocal(ahora);
+    if (finDate && !finInput.value) finInput.value = formatDatetimeLocal(finDate);
+    if (!finDate) finInput.value = "";
+
+  } else {
+    fechas.style.display = 'none';
+    // Limpia los campos si el código cambió
+    bloque.querySelector('.starlink-inicio').value = "";
+    bloque.querySelector('.starlink-fin').value = "";
+  }
+}
+
+// Escucha cambios en el campo código
+bloque.querySelector('.codigo').addEventListener('input', mostrarCamposStarlink);
+// Llama al cargar la fila
+mostrarCamposStarlink();
       agregarEventosVenta(bloque);
       agregarAutorellenoVenta(bloque);
       actualizarSubtotalFila(bloque);
